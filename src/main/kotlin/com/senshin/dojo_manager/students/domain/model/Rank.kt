@@ -1,7 +1,17 @@
 package com.senshin.dojo_manager.students.domain.model
 
+import com.senshin.dojo_manager.students.domain.exception.InvalidRankException
+
 enum class RankType {
-    KYU, DAN
+    KYU, DAN;
+
+    companion object {
+        fun from(value: String): RankType =
+            entries.firstOrNull { it.name.equals(value.trim(), ignoreCase = true) }
+                ?: throw InvalidRankException(
+                    "Tipo de rango inválido: '$value'. Valores permitidos: ${entries.joinToString()}"
+                )
+    }
 }
 
 data class Rank(
@@ -12,8 +22,8 @@ data class Rank(
 ): Comparable<Rank> {
 
     init {
-        require(level in 1..8) { "Level must be between 1 and 8" }
-        require(orderIndex > 0) {"OrderIndex must be greater than or equal to 1"}
+        if (level !in 1..8) throw InvalidRankException("El nivel del rango debe estar entre 1 y 8")
+        if (orderIndex < 1) throw InvalidRankException("El índice de orden del rango debe ser mayor o igual a 1")
     }
 
     override fun compareTo(other: Rank): Int = this.orderIndex.compareTo(other.orderIndex)
@@ -27,14 +37,10 @@ data class Rank(
             orderIndex = 1
         )
 
-        fun kyu(level: Int, color: BeltColor, orderIndex: Int): Rank {
-            require(level in 1..8)
-            return Rank(RankType.KYU, level, color, orderIndex)
-        }
+        fun kyu(level: Int, color: BeltColor, orderIndex: Int): Rank =
+            Rank(RankType.KYU, level, color, orderIndex)
 
-        fun dan(level: Int, orderIndex: Int): Rank {
-            require(level in 1..8)
-            return Rank(RankType.DAN, level, BeltColor.BLACK, orderIndex)
-        }
+        fun dan(level: Int, orderIndex: Int): Rank =
+            Rank(RankType.DAN, level, BeltColor.BLACK, orderIndex)
     }
 }

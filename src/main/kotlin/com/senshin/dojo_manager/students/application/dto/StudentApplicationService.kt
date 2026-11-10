@@ -1,5 +1,7 @@
 package com.senshin.dojo_manager.students.application.dto
 
+import com.senshin.dojo_manager.students.domain.exception.DuplicateIdentificationNumberException
+import com.senshin.dojo_manager.students.domain.exception.StudentNotFoundException
 import com.senshin.dojo_manager.students.domain.model.BeltColor
 import com.senshin.dojo_manager.students.domain.model.PersonalInfo
 import com.senshin.dojo_manager.students.domain.model.Rank
@@ -19,12 +21,16 @@ class StudentApplicationService(
 
 fun registerStudent(request: RegisterStudentsRequest): StudentsResponse {
 
-        val existing = studentRepository.findByIdentificationNumber(request.identificationNumber)
+        val identificationNumber = request.identificationNumber.trim()
+
+        if (studentRepository.findByIdentificationNumber(identificationNumber) != null) {
+            throw DuplicateIdentificationNumberException(identificationNumber)
+        }
 
         val personalInfo = PersonalInfo(
             firstName = request.firstName.trim(),
             lastName = request.lastName.trim(),
-            identificationNumber = request.identificationNumber.trim(),
+            identificationNumber = identificationNumber,
             birthDate = request.birthDate,
             phone = request.phone.trim(),
             emergencyContactName = request.emergencyContactName.trim(),
@@ -47,19 +53,19 @@ fun registerStudent(request: RegisterStudentsRequest): StudentsResponse {
     fun getStudent(id: UUID): StudentsResponse {
 
         val student = studentRepository.findById(StudentId(id))
-            ?:throw NoSuchElementException("No se encontro el alumno con ID: $id")
+            ?:throw StudentNotFoundException(id)
         return student.toResponse()
     }
 
     fun promoteStudent(id: UUID, request: PromotionStudentRequest): StudentsResponse {
 
         val student = studentRepository.findById(StudentId(id))
-            ?:throw NoSuchElementException("No se encontro el alumno con ID: $id")
+            ?:throw StudentNotFoundException(id)
 
         val newRank = Rank(
-            type = RankType.valueOf(request.targetRank.type.uppercase()),
+            type = RankType.from(request.targetRank.type),
             level = request.targetRank.level,
-            color = BeltColor.valueOf(request.targetRank.color.uppercase()),
+            color = BeltColor.from(request.targetRank.color),
             orderIndex = request.targetRank.orderIndex
         )
 

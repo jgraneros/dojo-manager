@@ -1,5 +1,7 @@
 package com.senshin.dojo_manager.students.domain.model
 
+import com.senshin.dojo_manager.students.domain.exception.InactiveStudentException
+import com.senshin.dojo_manager.students.domain.exception.InvalidRankException
 import java.time.LocalDate
 import java.util.UUID
 
@@ -32,9 +34,13 @@ class Student(
     val promotionHistory: List<PromotionRecord> get() = _promotionHistory.toList()
 
     fun promoteTo(newRank: Rank, promotionDate: LocalDate, examiner: String, observations: String? = null) {
-        check(status.isActive) { "Un alumno inactivo o suspendido no puede rendir examen" }
-        require(newRank > currentRank) {
-            "El grado otorgado ($newRank) debe ser estrictamente superior al grado actual ($currentRank)"
+        if (!status.isActive) {
+            throw InactiveStudentException("Un alumno inactivo o suspendido no puede rendir examen")
+        }
+        if (newRank <= currentRank) {
+            throw InvalidRankException(
+                "El grado otorgado ($newRank) debe ser estrictamente superior al grado actual ($currentRank)"
+            )
         }
         require(examiner.isNotBlank()) { "El evaluador/examinador es obligatorio" }
 
