@@ -1,4 +1,4 @@
-package com.senshin.dojo_manager.students.infrastructure.persistence
+package com.senshin.dojo_manager.students.infrastructure.persistence.entity
 
 import com.senshin.dojo_manager.students.domain.model.BeltColor
 import com.senshin.dojo_manager.students.domain.model.EnrollmentStatus

@@ -1,8 +1,10 @@
-package com.senshin.dojo_manager.students.infrastructure.persistence
+package com.senshin.dojo_manager.students.infrastructure.persistence.repository
 
 import com.senshin.dojo_manager.students.domain.model.Student
 import com.senshin.dojo_manager.students.domain.model.StudentId
 import com.senshin.dojo_manager.students.domain.repository.StudentRepository
+import com.senshin.dojo_manager.students.infrastructure.persistence.mapper.toDomain
+import com.senshin.dojo_manager.students.infrastructure.persistence.mapper.toJpaEntity
 
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional

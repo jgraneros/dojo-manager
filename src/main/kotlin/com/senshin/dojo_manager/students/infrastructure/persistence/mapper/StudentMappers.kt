@@ -1,10 +1,12 @@
-package com.senshin.dojo_manager.students.infrastructure.persistence
+package com.senshin.dojo_manager.students.infrastructure.persistence.mapper
 
 import com.senshin.dojo_manager.students.domain.model.PersonalInfo
 import com.senshin.dojo_manager.students.domain.model.PromotionRecord
 import com.senshin.dojo_manager.students.domain.model.Rank
 import com.senshin.dojo_manager.students.domain.model.Student
 import com.senshin.dojo_manager.students.domain.model.StudentId
+import com.senshin.dojo_manager.students.infrastructure.persistence.entity.PromotionRecordJpaEntity
+import com.senshin.dojo_manager.students.infrastructure.persistence.entity.StudentJpaEntity
 
 // --- De Dominio a JPA Entity ---
 
