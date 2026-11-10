@@ -15,7 +15,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Entity
-@Table(name = "PROMOTIONS")
+@Table(name = "promotion_records")
 class PromotionRecordJpaEntity(
 
     @Id
